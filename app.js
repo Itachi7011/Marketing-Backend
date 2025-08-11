@@ -10,6 +10,7 @@ const exec = require("child_process").exec;
 const shortid = require("shortid");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const jsonwebtoken = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
 const cookieParser = require("cookie-parser");
 const schedule = require("node-schedule");
