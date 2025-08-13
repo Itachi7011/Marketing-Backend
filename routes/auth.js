@@ -454,7 +454,7 @@ router.post("/api/auth/login", async (req, res, next) => {
                 return res.status(500).json({
                     success: false,
                     message: 'Failed to resend verification email. Please try again.',
-                    
+
                 });
             } else {
                 res.send("Sorry!");
@@ -499,5 +499,94 @@ router.get("/api/auth/userProfile", authenticate, async (req, res) => {
         console.log(`Error during Employeee Profile Page -${err}`);
     }
 });
+
+// @route   PUT /api/auth/userProfile
+// @desc    Update user profile
+// @access  Private
+router.put("/api/auth/userProfile", authenticate, async (req, res) => {
+    try {
+        // Debug logging
+        console.log('Headers:', req.headers);
+        console.log('Body received:', JSON.stringify(req.body, null, 2));
+        console.log('User ID from auth:', req.rootUser?._id);
+        
+        // Check if body is empty
+        if (!req.body || Object.keys(req.body).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'No data provided for update'
+            });
+        }
+
+        const updates = req.body;
+        const userId = req.rootUser._id;
+
+        // Validate that we have a valid user ID
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated'
+            });
+        }
+
+        console.log('Processing updates for user:', userId);
+        console.log('Updates to apply:', updates);
+
+        // Find the user first to check if they exist
+        const existingUser = await MarketingUser.findById(userId);
+        if (!existingUser) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Update the user with the new data
+        const updatedUser = await MarketingUser.findByIdAndUpdate(
+            userId,
+            { $set: updates },
+            { 
+                new: true, 
+                runValidators: true,
+                // This option returns the updated document
+                returnDocument: 'after'
+            }
+        );
+
+        console.log('Update successful for user:', userId);
+
+        res.status(200).json({
+            success: true,
+            message: 'Profile updated successfully',
+            user: updatedUser
+        });
+
+    } catch (err) {
+        console.error('Profile update error:', err);
+        
+        // Handle different types of errors
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({
+                success: false,
+                message: 'Validation error',
+                errors: Object.values(err.errors).map(e => e.message)
+            });
+        }
+
+        if (err.name === 'CastError') {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid data format'
+            });
+        }
+
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update profile',
+            error: err.message
+        });
+    }
+});
+
 
 module.exports = router;

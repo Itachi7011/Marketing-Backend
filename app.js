@@ -45,9 +45,28 @@ app.use(express.urlencoded({ extended: false }));
 // })
 
 
-// Routes
+//      Routes
+
 const authRoutes = require("./routes/auth");
 app.use(authRoutes);
+
+//      About Us Page Routes
+
+const contactUsRoutes = require("./routes/contactUs");
+app.use(contactUsRoutes);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
