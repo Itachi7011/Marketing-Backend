@@ -55,6 +55,11 @@ app.use(authRoutes);
 const contactUsRoutes = require("./routes/contactUs");
 app.use(contactUsRoutes);
 
+//      Schedule Demo Page Routes
+
+const scheduleDemoRoutes = require("./routes/scheduleDemo");
+app.use(scheduleDemoRoutes);
+
 
 
 
