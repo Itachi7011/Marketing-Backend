@@ -8,12 +8,18 @@ const MarketingUserSchema = new mongoose.Schema({
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         displayName: { type: String },
+        gender: {
+            type: String,
+            enum: [
+                'male', 'female', 'others',
+            ]
+        },
         avatar: {
             url: String,
             publicId: String
         },
         bio: { type: String, maxlength: 250 },
-        userType: { type: String , default: "Client"},
+        userType: { type: String, default: "Client" },
         timezone: { type: String },
         preferredLanguage: { type: String, default: "en" }
     },

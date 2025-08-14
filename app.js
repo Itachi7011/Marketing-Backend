@@ -62,7 +62,10 @@ app.use(scheduleDemoRoutes);
 
 
 
+//      Admin Pages Routes
 
+const adminRoutes = require("./routes/admin");
+app.use(adminRoutes);
 
 
 

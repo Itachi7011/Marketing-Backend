@@ -432,7 +432,6 @@ router.post("/api/auth/login", async (req, res, next) => {
         const data1 = await MarketingUser.findOne({
             'auth.email': Email,
         });
-        console.log(data1)
 
         if (data1) {
             const isMatch = await bcrypt.compare(Password, data1.auth.password);
@@ -469,7 +468,6 @@ router.get("/api/logout", authenticate, async (req, res) => {
     try {
         const modelName = req.rootUser.constructor.modelName;
 
-        console.log(modelName)
 
         let model;
 
@@ -587,6 +585,8 @@ router.put("/api/auth/userProfile", authenticate, async (req, res) => {
         });
     }
 });
+
+
 
 
 
