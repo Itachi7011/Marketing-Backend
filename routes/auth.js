@@ -45,6 +45,12 @@ const validateRegistration = [
         .isLength({ min: 2, max: 50 })
         .withMessage('Last name must be between 2 and 50 characters'),
 
+    body('gender')
+        .optional() // Making it optional since it's not marked as required in your schema
+        .trim()
+        .isIn(['male', 'female', 'others'])
+        .withMessage('Gender must be either male, female, or others'),
+
     body('email')
         .trim()
         .isEmail()
@@ -184,6 +190,7 @@ router.post('/api/auth/register', registerLimiter, validateRegistration, async (
             lastName,
             email,
             phone,
+            gender,
             password,
             timezone,
             companyName,
@@ -218,6 +225,7 @@ router.post('/api/auth/register', registerLimiter, validateRegistration, async (
                 lastName: lastName.trim(),
                 displayName: `${firstName.trim()} ${lastName.trim()}`,
                 timezone: timezone || 'UTC',
+                gender: gender,
                 preferredLanguage: 'en'
             },
             auth: {
@@ -507,7 +515,7 @@ router.put("/api/auth/userProfile", authenticate, async (req, res) => {
         console.log('Headers:', req.headers);
         console.log('Body received:', JSON.stringify(req.body, null, 2));
         console.log('User ID from auth:', req.rootUser?._id);
-        
+
         // Check if body is empty
         if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).json({
@@ -543,8 +551,8 @@ router.put("/api/auth/userProfile", authenticate, async (req, res) => {
         const updatedUser = await MarketingUser.findByIdAndUpdate(
             userId,
             { $set: updates },
-            { 
-                new: true, 
+            {
+                new: true,
                 runValidators: true,
                 // This option returns the updated document
                 returnDocument: 'after'
@@ -561,7 +569,7 @@ router.put("/api/auth/userProfile", authenticate, async (req, res) => {
 
     } catch (err) {
         console.error('Profile update error:', err);
-        
+
         // Handle different types of errors
         if (err.name === 'ValidationError') {
             return res.status(400).json({

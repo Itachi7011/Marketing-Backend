@@ -15,20 +15,29 @@ dotenv.config({ path: "../" });
 const authenticate = require("../authenticate/customerAuthenticate");
 
 const UsersDB = require("../models/User");
+const ScheduleDemosDB = require("../models/ScheduleDemo");
 
 
 const EMAIL = process.env.EMAIL;
 const PASSWORD = process.env.PASSWORD;
 
 router.get("/api/userList", async (req, res) => {
-  try {
-    const data = await UsersDB.find({});
-    console.log(data)
-    res.send(data);
-    // console.log(req.rootUser)
-  } catch (err) {
-    console.log(`Error during User's List -${err}`);
-  }
+    try {
+        const data = await UsersDB.find({});
+        res.send(data);
+    } catch (err) {
+        console.log(`Error during User's List -${err}`);
+    }
 })
 
-;module.exports = router;
+router.get("/api/scheduleDemoList", async (req, res) => {
+    try {
+        const data = await ScheduleDemosDB.find({});
+        res.send(data);
+    } catch (err) {
+        console.log(`Error during User's List -${err}`);
+    }
+})
+
+
+    ; module.exports = router;
