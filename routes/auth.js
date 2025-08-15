@@ -500,6 +500,8 @@ router.get("/api/logout", authenticate, async (req, res) => {
 
 router.get("/api/auth/userProfile", authenticate, async (req, res) => {
     try {
+                console.log("backend rootuser is : " ,req.rootUser)
+
         res.send(req.rootUser);
     } catch (err) {
         console.log(`Error during Employeee Profile Page -${err}`);
